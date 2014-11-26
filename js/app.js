@@ -1,3 +1,13 @@
+// Game state
+var start = false;
+
+// number of enemies (const)
+var numEnemy = 5;
+
+// an array of enemies
+var allEnemies = [];
+
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -6,7 +16,21 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-}
+
+    // The speed for each enemy move in x direction
+    this.speed = Math.random() * 50 + 50;
+
+    // The position of enemy
+    this.x = -100;
+    this.y = -100;
+};
+
+// Spawn a enemy
+Enemy.prototype.spawn = function() {
+    // set initial value of x and y
+    this.x = -200 - Math.floor(Math.random() * 50);
+    this.y = Math.floor(Math.random() * 3) * 80 + 60;
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -14,22 +38,52 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-}
+
+    // update position
+    this.x += this.x + dt * this.speed;
+
+    // respawn enemy if enemy has been out
+    if (this.x > 600)
+        this.spawn();
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
+// Player Class
+var Player = function() {
+
+};
+
+// Update Player status
+Player.prototype.update = function(){
+
+};
+
+// Draw the player on the screen
+Player.prototype.render = function(){
+
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+// generate enemies
+for (i = 0; i < numEnemy; i++) {
+    var enemy = new Enemy();
+    enemy.spawn();
+    allEnemies.push(enemy);
+}
+
+// player instance
+var player = new Player();
 
 
 // This listens for key presses and sends the keys to your
