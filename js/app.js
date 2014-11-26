@@ -18,7 +18,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     // The speed for each enemy move in x direction
-    this.speed = Math.random() * 50 + 50;
+    this.speed = Math.random() * 60 + 60;
 
     // The position of enemy
     this.x = -100;
@@ -28,7 +28,7 @@ var Enemy = function() {
 // Spawn a enemy
 Enemy.prototype.spawn = function() {
     // set initial value of x and y
-    this.x = -200 - Math.floor(Math.random() * 50);
+    this.x = -200 - Math.floor(Math.random() * 300);
     this.y = Math.floor(Math.random() * 3) * 80 + 60;
 };
 
@@ -40,7 +40,7 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     // update position
-    this.x += this.x + dt * this.speed;
+    this.x += dt * this.speed;
 
     // respawn enemy if enemy has been out
     if (this.x > 600)
@@ -59,6 +59,21 @@ Enemy.prototype.render = function() {
 // Player Class
 var Player = function() {
 
+    // initial position
+    this.x = 202;
+    this.y = 404;
+
+    // sprite set
+    this.sprites = [
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+    ];
+
+    // choose one of sprite
+    this.sprite = this.sprites[2];
 };
 
 // Update Player status
@@ -68,7 +83,52 @@ Player.prototype.update = function(){
 
 // Draw the player on the screen
 Player.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
+
+// Player input handler
+Player.prototype.handleInput = function(key){
+    // players' moving distance
+    var disX = 101;
+    var disY = 85;
+    this.dx = 0;
+    this.dy = 0;
+
+    // calculate target point
+    var targetX = this.x;
+    var targetY = this.y;
+
+    switch (key) {
+        case 'up':
+            targetY = this.y - disY;
+            this.dy = - disY / 5;
+            break;
+        case 'down':
+            targetY = this.y + disY;
+            this.dy = disY / 5;
+            break;
+        case 'left':
+            targetX = this.x - disX;
+            this.dx = - disX / 5;
+            break;
+        case 'right':
+            targetX = this.x + disX;
+            this.dx = disX / 5;
+            break;
+    }
+
+    // check if the movement if legal
+    if (!(targetX > 500 || targetX < -2 || targetY < 60 || targetY > 450)) {
+        // transition animation
+        for (i = 0 ; i < 5 ; i++)
+            // Here involves a hard coding, which is not a good practice
+            setTimeout(function(){
+                player.x += player.dx;
+                player.y += player.dy;
+                player.render();
+            },20*i);
+    }
 };
 
 // Now instantiate your objects.

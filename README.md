@@ -1,6 +1,7 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+Huang Geyang (Hosuke) 2014
 
-for self-checking their submission.
+Key features:
+    1. There is a transition animation for player moving between grids
