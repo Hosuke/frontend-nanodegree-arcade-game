@@ -1,7 +1,7 @@
 // Game state
 var start = false;
 
-// number of enemies (const)
+// number of enemies at beginning
 var numEnemy = 5;
 
 // an array of enemies
@@ -17,6 +17,12 @@ var moving = false;
 // Score, which is the number of gems the player get
 var score = 0;
 
+// Level, level up through gaining key
+var level = 1;
+
+// Speed factor
+var speedFactor = 1;
+
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -28,7 +34,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     // The speed for each enemy move in x direction
-    this.speed = Math.random() * 75 + 55;
+    this.speed = Math.random() * 75 * speedFactor + 55;
 
     // The position of enemy
     this.x = -100;
@@ -40,6 +46,7 @@ Enemy.prototype.spawn = function() {
     // set initial value of x and y
     this.x = -150 - Math.floor(Math.random() * 350);
     this.y = Math.floor(Math.random() * 3) * 80 + 60;
+    this.speed = Math.random() * 75 * speedFactor + 55;
 };
 
 // Update the enemy's position, required method for game
@@ -210,6 +217,11 @@ Gem.prototype.spawn = function() {
     // random position
     this.x = Math.floor(Math.random() * 5) * 101;
     this.y = Math.floor(Math.random() * 3) * 80 + 55;
+    // must not at the same position as key
+    while(this.x == key.x && this.y == key.y) {
+        this.x = Math.floor(Math.random() * 5) * 101;
+        this.y = Math.floor(Math.random() * 3) * 80 + 55;
+    }
 };
 
 // Render the gem
@@ -217,9 +229,44 @@ Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Key Class
+var Key = function() {
+    // default position
+    this.x = -150;
+    this.y = -150;
+    this.sprite = 'images/Key.png';
+};
+
+// Spawn a key on map
+Key.prototype.spawn = function() {
+    // random position
+    this.x = Math.floor(Math.random() * 5) * 101;
+    this.y = Math.floor(Math.random() * 3) * 80 + 55;
+    // must not at the same position as gem
+    while(this.x == gem.x && this.y == gem.y) {
+        this.x = Math.floor(Math.random() * 5) * 101;
+        this.y = Math.floor(Math.random() * 3) * 80 + 55;
+    }
+};
+
+// Get the key out
+Key.prototype.out = function() {
+    this.x = -150;
+    this.y = -150;
+};
+
+// Render the key
+Key.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+// key instance
+var key = new Key();
 
 // gem instance
 var gem = new Gem();

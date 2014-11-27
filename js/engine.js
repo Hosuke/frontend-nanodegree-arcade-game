@@ -27,10 +27,14 @@ var Engine = (function(global) {
 
     // Collision boolean
     var collideEnemy = false,
-        collideGem = false;
+        collideGem = false,
+        collideKey = false;
 
     // image of Selector
     var selectorImage = 'images/Selector.png';
+
+    // num of Gems get during this level
+    var levelGem = 0;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -88,15 +92,44 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+
+        // Collide with Enemy then reset
         if (collideEnemy)
             reset();
+
+        // Collide with Gem then score up
         if (collideGem) {
-            score += 1;
+            levelGem += 1;
+            score += level;
             collideGem = false;
+            if (levelGem == 5)
+                key.spawn();
             gem.spawn();
+        }
+
+        // Collide with Key then level up
+        if (collideKey) {
+            collideKey = false;
+            levelup();
+            key.out();
         }
     }
 
+    /*
+        This function handle the logic changes during level up
+     */
+    function levelup() {
+        level += 1;
+        levelGem = 0;
+
+        // Speed up
+        speedFactor += 0.1;
+
+        // New enemy
+        var enemy = new Enemy();
+        enemy.spawn();
+        allEnemies.push(enemy);
+    }
 
     /*
         This function check if player collide with any enemy or gem
@@ -118,6 +151,13 @@ var Engine = (function(global) {
         var dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
         if (dist < 51)
             collideGem = true;
+
+        // check key
+        distX = key.x - player.x;
+        distY = key.y - player.y;
+        dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+        if (dist < 51)
+            collideKey = true;
     }
 
     /* This is called by the update function  and loops through all of the
@@ -205,15 +245,15 @@ var Engine = (function(global) {
         // start state
         if (start) {
             // Display score
-            ctx.shadowColor = "#333333";
-            ctx.shadowOffsetX = 2;
-            ctx.shadowOffsetY = 2;
-            ctx.shadowBlur = 10;
             ctx.textAlign = "center";
             ctx.font="20pt Arial";
             ctx.fillStyle = 'white';
             var scoreStr = "score: " + score;
             ctx.fillText(scoreStr, 430, 100);
+
+            // Display level
+            var levelStr = "level: " + level;
+            ctx.fillText(levelStr, 70, 100);
         }
     }
 
@@ -226,6 +266,7 @@ var Engine = (function(global) {
          * the render function you have defined.
          */
         gem.render();
+        key.render();
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -246,6 +287,9 @@ var Engine = (function(global) {
                 score = 0;
                 collideEnemy = false;
                 collideGem = false;
+                collideKey = false;
+                level = 1;
+                speedFactor = 1;
             }
         },2);
     }

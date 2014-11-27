@@ -10,3 +10,4 @@ Huang Geyang (Hosuke) 2014
 3.  Gem with random color will randomly appear on map
 4.  Player can choose his/her own character
 5.  Score system
+6.  Level System, more score gained at higher level
