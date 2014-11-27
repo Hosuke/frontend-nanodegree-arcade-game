@@ -290,6 +290,7 @@ var Engine = (function(global) {
                 collideKey = false;
                 level = 1;
                 speedFactor = 1;
+                levelGem = 0;
             }
         },2);
     }
