@@ -7,6 +7,13 @@ var numEnemy = 5;
 // an array of enemies
 var allEnemies = [];
 
+// Spin lock for critical section
+/*
+    As player may be reset while moving and cause position inconsistency,
+    this lock ensures player can only do one thing at a time.
+ */
+var moving = false;
+
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -86,6 +93,18 @@ Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Reset player to initial position, return false if fail
+Player.prototype.reset = function() {
+    // check spin lock
+    if (moving) {
+        return false;
+    } else {
+        // set position
+        this.x = 202;
+        this.y = 404;
+        return true;
+    }
+};
 
 // Player input handler
 Player.prototype.handleInput = function(key){
@@ -120,14 +139,22 @@ Player.prototype.handleInput = function(key){
 
     // check if the movement if legal
     if (!(targetX > 500 || targetX < -2 || targetY < 60 || targetY > 450)) {
-        // transition animation
+        // Critical region: transition animation
+
+        // 1. Grab the lock
+        moving = true;
+
+        // 2. Do something
         for (i = 0 ; i < 5 ; i++)
             // Here involves a hard coding, which is not a good practice
             setTimeout(function(){
                 player.x += player.dx;
                 player.y += player.dy;
                 player.render();
-            },20*i);
+            },15*i);
+
+        // 3. Release the lock (in predicted future)
+        setTimeout(function(){moving = false},70);
     }
 };
 

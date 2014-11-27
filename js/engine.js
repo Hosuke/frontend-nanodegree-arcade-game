@@ -25,6 +25,10 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
+    // Collision boolean
+    var collideEnemy = false,
+        collideGem = false;
+
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -80,7 +84,24 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        if (collideEnemy)
+            reset();
+    }
+
+
+    /*
+        This function check if player collide with any enemy or gem
+     */
+
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy){
+            var distX = enemy.x - player.x;
+            var distY = enemy.y - player.y;
+            var dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+            if (dist < 51)
+                collideEnemy = true;
+        });
     }
 
     /* This is called by the update function  and loops through all of the
@@ -160,7 +181,15 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        // This is a bit confusing, but all it does is wait
+        setTimeout(function(){
+            if (!player.reset()) {
+                reset();
+            } else {
+                collideEnemy = false;
+                collideGem = false;
+            }
+        },2);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
