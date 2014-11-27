@@ -14,6 +14,9 @@ var allEnemies = [];
  */
 var moving = false;
 
+// Score, which is the number of gems the player get
+var score = 0;
+
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -25,7 +28,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     // The speed for each enemy move in x direction
-    this.speed = Math.random() * 60 + 60;
+    this.speed = Math.random() * 75 + 55;
 
     // The position of enemy
     this.x = -100;
@@ -35,7 +38,7 @@ var Enemy = function() {
 // Spawn a enemy
 Enemy.prototype.spawn = function() {
     // set initial value of x and y
-    this.x = -200 - Math.floor(Math.random() * 300);
+    this.x = -150 - Math.floor(Math.random() * 350);
     this.y = Math.floor(Math.random() * 3) * 80 + 60;
 };
 
@@ -79,8 +82,11 @@ var Player = function() {
         'images/char-princess-girl.png'
     ];
 
+    // default spirit number
+    this.character = 2;
+
     // choose one of sprite
-    this.sprite = this.sprites[2];
+    this.sprite = this.sprites[this.character];
 };
 
 // Update Player status
@@ -90,7 +96,8 @@ Player.prototype.update = function(){
 
 // Draw the player on the screen
 Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (start)
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Reset player to initial position, return false if fail
@@ -104,6 +111,24 @@ Player.prototype.reset = function() {
         this.y = 404;
         return true;
     }
+};
+
+// Player choosing character
+Player.prototype.choosing = function(key){
+    switch (key) {
+        case 'up':
+            start = true;
+            break;
+        case 'left':
+            if (this.character > 0)
+                this.character -= 1;
+            break;
+        case 'right':
+            if (this.character < 4)
+                this.character += 1;
+            break;
+    }
+    this.sprite = this.sprites[this.character];
 };
 
 // Player input handler
@@ -158,9 +183,47 @@ Player.prototype.handleInput = function(key){
     }
 };
 
+// Gem Class
+var Gem = function(){
+    // default position
+    this.x = -150;
+    this.y = -150;
+
+    // sprite set
+    this.sprites = [
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
+    ];
+
+    // default color
+    this.gem = 0;
+    this.sprite = this.sprites[this.gem];
+};
+
+// Spawn a Gem randomly on map
+Gem.prototype.spawn = function() {
+    // random color
+    this.gem = Math.floor(Math.random() * 3);
+    this.sprite = this.sprites[this.gem];
+
+    // random position
+    this.x = Math.floor(Math.random() * 5) * 101;
+    this.y = Math.floor(Math.random() * 3) * 80 + 55;
+};
+
+// Render the gem
+Gem.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+// gem instance
+var gem = new Gem();
+gem.spawn();
 
 // generate enemies
 for (i = 0; i < numEnemy; i++) {
@@ -182,6 +245,8 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
-    player.handleInput(allowedKeys[e.keyCode]);
+    if (start)
+        player.handleInput(allowedKeys[e.keyCode]);
+    else
+        player.choosing(allowedKeys[e.keyCode]);
 });

@@ -29,6 +29,9 @@ var Engine = (function(global) {
     var collideEnemy = false,
         collideGem = false;
 
+    // image of Selector
+    var selectorImage = 'images/Selector.png';
+
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -61,6 +64,33 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
+
+        // pre-start state
+        if (!start) {
+            //drawing selector
+            ctx.drawImage(Resources.get(selectorImage), player.character*101, 375);
+
+            // drawing characters for choosing
+            for (var i = 0; i < player.sprites.length; i++)
+                ctx.drawImage(Resources.get(player.sprites[i]), i * 101, 404);
+
+            // introduction text
+            ctx.shadowColor = "#333333";
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 10;
+            ctx.textAlign = "center";
+
+            ctx.font="36px Arial";
+            ctx.fillStyle = 'white';
+            ctx.fillText("Effective JavaScript: Frogger", canvas.width/2, 250);
+
+            ctx.font="30px Arial";
+            ctx.fillText("Press the UP to start", canvas.width/2, 420);
+
+            ctx.font="20px Arial";
+            ctx.fillText("By Hosuke 2014", canvas.width/2, 570);
+        }
     };
 
     /* This function does some initial setup that should only occur once,
@@ -87,6 +117,11 @@ var Engine = (function(global) {
         checkCollisions();
         if (collideEnemy)
             reset();
+        if (collideGem) {
+            score += 1;
+            collideGem = false;
+            gem.spawn();
+        }
     }
 
 
@@ -95,6 +130,7 @@ var Engine = (function(global) {
      */
 
     function checkCollisions() {
+        // check enemy
         allEnemies.forEach(function(enemy){
             var distX = enemy.x - player.x;
             var distY = enemy.y - player.y;
@@ -102,6 +138,13 @@ var Engine = (function(global) {
             if (dist < 51)
                 collideEnemy = true;
         });
+
+        // check gem
+        var distX = gem.x - player.x;
+        var distY = gem.y - player.y;
+        var dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+        if (dist < 51)
+            collideGem = true;
     }
 
     /* This is called by the update function  and loops through all of the
@@ -169,6 +212,7 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        gem.render();
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -186,6 +230,7 @@ var Engine = (function(global) {
             if (!player.reset()) {
                 reset();
             } else {
+                score = 0;
                 collideEnemy = false;
                 collideGem = false;
             }
