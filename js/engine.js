@@ -64,33 +64,6 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-
-        // pre-start state
-        if (!start) {
-            //drawing selector
-            ctx.drawImage(Resources.get(selectorImage), player.character*101, 375);
-
-            // drawing characters for choosing
-            for (var i = 0; i < player.sprites.length; i++)
-                ctx.drawImage(Resources.get(player.sprites[i]), i * 101, 404);
-
-            // introduction text
-            ctx.shadowColor = "#333333";
-            ctx.shadowOffsetX = 2;
-            ctx.shadowOffsetY = 2;
-            ctx.shadowBlur = 10;
-            ctx.textAlign = "center";
-
-            ctx.font="36px Arial";
-            ctx.fillStyle = 'white';
-            ctx.fillText("Effective JavaScript: Frogger", canvas.width/2, 250);
-
-            ctx.font="30px Arial";
-            ctx.fillText("Press the UP to start", canvas.width/2, 420);
-
-            ctx.font="20px Arial";
-            ctx.fillText("By Hosuke 2014", canvas.width/2, 570);
-        }
     };
 
     /* This function does some initial setup that should only occur once,
@@ -200,8 +173,48 @@ var Engine = (function(global) {
             }
         }
 
-
         renderEntities();
+
+        // pre-start state
+        if (!start) {
+            //drawing selector
+            ctx.drawImage(Resources.get(selectorImage), player.character*101, 375);
+
+            // drawing characters for choosing
+            for (var i = 0; i < player.sprites.length; i++)
+                ctx.drawImage(Resources.get(player.sprites[i]), i * 101, 404);
+
+            // introduction text
+            ctx.shadowColor = "#333333";
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 10;
+            ctx.textAlign = "center";
+
+            ctx.font="36px Arial";
+            ctx.fillStyle = '#FFFF99';
+            ctx.fillText("Effective JavaScript: Frogger", canvas.width/2, 250);
+
+            ctx.font="30px Arial";
+            ctx.fillText("Press the UP to start", canvas.width/2, 420);
+
+            ctx.font="20px Arial";
+            ctx.fillText("By Hosuke 2014", canvas.width/2, 570);
+        }
+
+        // start state
+        if (start) {
+            // Display score
+            ctx.shadowColor = "#333333";
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 10;
+            ctx.textAlign = "center";
+            ctx.font="20pt Arial";
+            ctx.fillStyle = 'white';
+            var scoreStr = "score: " + score;
+            ctx.fillText(scoreStr, 430, 100);
+        }
     }
 
     /* This function is called by the render function and is called on each game
