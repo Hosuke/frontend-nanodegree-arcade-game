@@ -70,7 +70,8 @@ var Engine = (function(global) {
         win.requestAnimationFrame(main);
     };
 
-    /* This function does some initial setup that should only occur once,
+    /**
+     * This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
@@ -80,7 +81,8 @@ var Engine = (function(global) {
         main();
     }
 
-    /* This function is called by main (our game loop) and itself calls all
+    /**
+     * This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
      * same space, for instance when your character should die), you may find
@@ -88,6 +90,7 @@ var Engine = (function(global) {
      * it commented out - you may or may not want to implement this
      * functionality this way (you could just implement collision detection
      * on the entities themselves within your app.js file).
+     * @param {number} dt a small time interval
      */
     function update(dt) {
         updateEntities(dt);
@@ -115,8 +118,8 @@ var Engine = (function(global) {
         }
     }
 
-    /*
-        This function handle the logic changes during level up
+    /**
+     * This function handle the logic changes during level up
      */
     function levelup() {
         level += 1;
@@ -131,8 +134,8 @@ var Engine = (function(global) {
         allEnemies.push(enemy);
     }
 
-    /*
-        This function check if player collide with any enemy or gem
+    /**
+     * This function check if player collide with any enemy or gem
      */
 
     function checkCollisions() {

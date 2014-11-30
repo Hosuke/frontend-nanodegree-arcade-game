@@ -25,6 +25,10 @@ var speedFactor = 1;
 
 
 // Enemies our player must avoid
+/**
+ * Enemy Constructor
+ * @constructor
+ */
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -41,16 +45,19 @@ var Enemy = function() {
     this.y = -100;
 };
 
-// Spawn a enemy
+/**
+ * Spawn a enemy
+ */
 Enemy.prototype.spawn = function() {
     // set initial value of x and y
     this.x = -150 - Math.floor(Math.random() * 350);
     this.y = Math.floor(Math.random() * 3) * 80 + 60;
     this.speed = Math.random() * 75 * speedFactor + 55;
 };
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+/**
+ * Update the enemy's position, required method for game
+ * @param dt a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -74,6 +81,10 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 // Player Class
+/**
+ * Player Constructor
+ * @constructor
+ */
 var Player = function() {
 
     // initial position
@@ -101,13 +112,18 @@ Player.prototype.update = function(){
 
 };
 
-// Draw the player on the screen
+/**
+ * Draw the player on the screen
+ */
 Player.prototype.render = function(){
     if (start)
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Reset player to initial position, return false if fail
+/**
+ * Reset player to initial position, return false if fail
+ * @returns {boolean} false if fail to reset
+ */
 Player.prototype.reset = function() {
     // check spin lock
     if (moving) {
@@ -120,7 +136,10 @@ Player.prototype.reset = function() {
     }
 };
 
-// Player choosing character
+/**
+ * Player choosing character
+ * @param key the key player pressed
+ */
 Player.prototype.choosing = function(key){
     switch (key) {
         case 'up':
@@ -138,7 +157,10 @@ Player.prototype.choosing = function(key){
     this.sprite = this.sprites[this.character];
 };
 
-// Player input handler
+/**
+ * Player input handler during playing
+ * @param key the key player pressed
+ */
 Player.prototype.handleInput = function(key){
     // players' moving distance
     var disX = 101;
@@ -191,6 +213,10 @@ Player.prototype.handleInput = function(key){
 };
 
 // Gem Class
+/**
+ * Gem constructor
+ * @constructor
+ */
 var Gem = function(){
     // default position
     this.x = -150;
@@ -208,7 +234,9 @@ var Gem = function(){
     this.sprite = this.sprites[this.gem];
 };
 
-// Spawn a Gem randomly on map
+/**
+ * Spawn a Gem randomly on map
+ */
 Gem.prototype.spawn = function() {
     // random color
     this.gem = Math.floor(Math.random() * 3);
@@ -224,7 +252,9 @@ Gem.prototype.spawn = function() {
     }
 };
 
-// Render the gem
+/**
+ * Render the gem
+ */
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -237,7 +267,9 @@ var Key = function() {
     this.sprite = 'images/Key.png';
 };
 
-// Spawn a key on map
+/**
+ * Spawn a key on map
+ */
 Key.prototype.spawn = function() {
     // random position
     this.x = Math.floor(Math.random() * 5) * 101;
@@ -249,13 +281,17 @@ Key.prototype.spawn = function() {
     }
 };
 
-// Get the key out
+/**
+ * Get the key out
+ */
 Key.prototype.out = function() {
     this.x = -150;
     this.y = -150;
 };
 
-// Render the key
+/**
+ * Render the key
+ */
 Key.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -283,8 +319,11 @@ for (i = 0; i < numEnemy; i++) {
 var player = new Player();
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+/**
+ * This listens for key presses and sends the keys to your
+ * Player.handleInput() method. You don't need to modify this.
+ * @param e the key pressed
+ */
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
