@@ -294,6 +294,10 @@ var Engine = (function(global) {
                 level = 1;
                 speedFactor = 1;
                 levelGem = 0;
+
+                // remove extra enemy
+                while (allEnemies.length > numEnemy)
+                    allEnemies.pop();
             }
         },2);
     }
